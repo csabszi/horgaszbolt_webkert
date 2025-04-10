@@ -1,1 +1,1 @@
-# horgaszbolt_webkert
+# Horgászbolt projekt - 2024/2025 2. Félév
