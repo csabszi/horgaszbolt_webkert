@@ -1,5 +1,8 @@
 h1 {
-    color: #a30c0cc7;
     text-align: center;
-    size: 30px;
+    color: #861010;
+
+    @media screen and (max-width: 600px) {
+        font-size: medium;
+    }
 }
