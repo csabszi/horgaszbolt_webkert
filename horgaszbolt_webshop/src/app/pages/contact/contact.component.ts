@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { Message } from '../../shared/message.model';
 
 @Component({
   selector: 'app-contact',
@@ -39,6 +40,17 @@ export class ContactComponent {
     if (this.contactForm.valid) {
       this.isLoading = true;
 
+      const newMessage: Message = {
+        name: this.contactForm.value.name!,
+        email: this.contactForm.value.email!,
+        message: this.contactForm.value.message!,
+        sentDate: new Date()
+      };
+
+      const storedMessages: Message[] = JSON.parse(localStorage.getItem('messages') || '[]');
+      storedMessages.push(newMessage);
+      localStorage.setItem('messages', JSON.stringify(storedMessages));
+
       setTimeout(() => {
         alert('Üzenet elküldve!');
         this.contactForm.reset();
@@ -46,4 +58,5 @@ export class ContactComponent {
       }, 1500);
     }
   }
+
 }
