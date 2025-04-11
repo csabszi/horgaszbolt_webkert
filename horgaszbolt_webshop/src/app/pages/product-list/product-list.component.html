@@ -1,13 +1,24 @@
 <div class="product-list">
-    <h2>Termékeink</h2>
+  <h2>Termékeink</h2>
 
-    <p *ngIf="products.length === 0">Jelenleg nincs elérhető termék.</p>
+  <p *ngIf="products.length === 0">Jelenleg nincs elérhető termék.</p>
 
-    <div class="products-grid" *ngIf="products.length > 0">
-        <a *ngFor="let product of products" [routerLink]="['/product-details', product.id]" class="product-card">
-            <img [src]="product.imageUrl" [alt]="product.name" />
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price | hufCurrency }}</p>
-        </a>
-    </div>
+  <div class="products-grid" *ngIf="products.length > 0">
+    <a *ngFor="let product of products" [routerLink]="['/product-details', product.id]" class="product-card"
+      [ngClass]="{ 'out-of-stock-card': product.amount === 0 }">
+
+      <img [src]="product.imageUrl" [alt]="product.name" [ngClass]="{ 'faded': product.amount === 0 }" />
+
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.price | hufCurrency }}</p>
+
+      <p [ngClass]="{
+              'in-stock': product.amount > 0,
+              'out-of-stock': product.amount === 0
+            }">
+        {{ product.amount > 0 ? 'Készleten: ' + product.amount + ' db' : 'Elfogyott' }}
+      </p>
+
+    </a>
+  </div>
 </div>
