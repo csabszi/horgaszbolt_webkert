@@ -1,1 +1,11 @@
-<p>product-list works!</p>
+<div class="product-list">
+    <h2>Termékeink</h2>
+
+    <div class="products-grid">
+        <a *ngFor="let product of products" [routerLink]="['/products', product.id]" class="product-card">
+            <img [src]="product.imageUrl" [alt]="product.name" />
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }} Ft</p>
+        </a>
+    </div>
+</div>
