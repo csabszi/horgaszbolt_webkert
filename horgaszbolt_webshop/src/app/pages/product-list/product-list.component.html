@@ -1,7 +1,9 @@
 <div class="product-list">
     <h2>Termékeink</h2>
 
-    <div class="products-grid">
+    <p *ngIf="products.length === 0">Jelenleg nincs elérhető termék.</p>
+
+    <div class="products-grid" *ngIf="products.length > 0">
         <a *ngFor="let product of products" [routerLink]="['/product-details', product.id]" class="product-card">
             <img [src]="product.imageUrl" [alt]="product.name" />
             <h3>{{ product.name }}</h3>
