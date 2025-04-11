@@ -1,1 +1,37 @@
-<p>contact works!</p>
+<div id="contact-container">
+  @if (isLoading) {
+  <div class="loading-container">
+    <h2>Üzenet küldése folyamatban</h2>
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Kérlek várj...</p>
+  </div>
+  }
+
+  @if (!isLoading) {
+  <form [formGroup]="contactForm" (ngSubmit)="send()" class="contact-form">
+    <h1>Kapcsolatfelvétel</h1>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Név</mat-label>
+      <input matInput formControlName="name" />
+      <mat-icon matSuffix>person</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-icon matSuffix>email</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Üzenet</mat-label>
+      <textarea matInput formControlName="message" rows="5"></textarea>
+      <mat-icon matSuffix>chat</mat-icon>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" [disabled]="contactForm.invalid">
+      Küldés
+    </button>
+  </form>
+  }
+</div>
