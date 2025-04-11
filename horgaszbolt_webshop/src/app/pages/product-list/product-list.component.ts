@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Product } from '../../shared/product.model';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CurrencyPipe } from '../../shared/currency.pipe';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, CurrencyPipe],
 })
 export class ProductListComponent {
   products: Product[] = [
