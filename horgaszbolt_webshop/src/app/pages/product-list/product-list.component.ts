@@ -12,6 +12,12 @@ import { CurrencyPipe } from '../../shared/currency.pipe';
   imports: [RouterModule, CommonModule, CurrencyPipe],
 })
 export class ProductListComponent {
+  orderProduct(productId: number, product: Product) {
+    product.amount -= 1;
+    alert(`Sikeres rendelés! Termék ID: ${productId}`);
+  }
+
+
   products: Product[] = [
     {
       id: 1,
@@ -154,5 +160,4 @@ export class ProductListComponent {
       amount: 1
     }
   ];
-
 }

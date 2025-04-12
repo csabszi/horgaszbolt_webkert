@@ -17,7 +17,7 @@
 
     .product-card {
         width: 300px;
-        height: 370px;
+        min-height: 370px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -51,17 +51,20 @@
         p {
             font-weight: bold;
             color: #333;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        button {
             margin-top: auto;
-        }
-
-        .in-stock {
-            color: green;
-            font-weight: bold;
-        }
-
-        .out-of-stock {
-            color: red;
-            font-weight: bold;
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: #ffffff;
+            background-color: #121212;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         .in-stock {
@@ -79,10 +82,9 @@
             filter: grayscale(70%);
         }
 
-        .out-of-stock-card {
+        &.out-of-stock-card {
             cursor: not-allowed;
             pointer-events: none;
         }
-
     }
 }

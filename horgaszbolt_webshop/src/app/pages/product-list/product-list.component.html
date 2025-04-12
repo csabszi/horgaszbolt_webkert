@@ -19,6 +19,7 @@
         {{ product.amount > 0 ? 'Készleten: ' + product.amount + ' db' : 'Elfogyott' }}
       </p>
 
+      <button mat-flat-button color="primary" (click)="orderProduct(product.id, product)">Rendelés</button>
     </a>
   </div>
 </div>
