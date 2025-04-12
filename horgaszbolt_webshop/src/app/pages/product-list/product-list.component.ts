@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
-import { Product } from '../../shared/product.model';
+import { Product } from '../../shared/models/product.model';
+import { CartItem } from '../../shared/models/cart-item.model';
+import { OrderData } from '../../shared/models/order-data.model';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CurrencyPipe } from '../../shared/currency.pipe';
+import { CurrencyPipe } from '../../shared/models/currency.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
-  imports: [RouterModule, CommonModule, CurrencyPipe],
+  imports: [RouterModule, CommonModule, CurrencyPipe, MatIconModule],
 })
 export class ProductListComponent {
-  orderProduct(productId: number, product: Product) {
-    product.amount -= 1;
-    alert(`Sikeres rendelés! Termék ID: ${productId}`);
-  }
-
-
   products: Product[] = [
     {
       id: 1,
@@ -160,4 +157,27 @@ export class ProductListComponent {
       amount: 1
     }
   ];
+
+  cart: CartItem[] = [];
+  formAdatok: OrderData | null = null;
+
+  orderProduct(product: Product): void {
+    if (product.amount > 0) {
+      product.amount--;
+
+      const existingItem = this.cart.find(item => item.product.id === product.id);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        this.cart.push({ product, quantity: 1 });
+      }
+    } else {
+      alert('Ez a termék elfogyott!');
+    }
+  }
+
+  onFormSubmitted(adatok: OrderData): void {
+    this.formAdatok = adatok;
+    console.log('Form beküldve:', adatok);
+  }
 }

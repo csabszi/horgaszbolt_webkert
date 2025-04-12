@@ -1,1 +1,19 @@
-<p>order-form works!</p>
+<form [formGroup]="orderForm" (ngSubmit)="submitForm()">
+    <label>Név:
+        <input formControlName="name" type="text" />
+    </label>
+
+    <label>Cím:
+        <input formControlName="address" type="text" />
+    </label>
+
+    <label>Telefonszám:
+        <input formControlName="phone" type="tel" />
+    </label>
+
+    <label>Megjegyzés:
+        <textarea formControlName="comment"></textarea>
+    </label>
+
+    <button type="submit" mat-flat-button color="primary">Rendelés leadása</button>
+</form>

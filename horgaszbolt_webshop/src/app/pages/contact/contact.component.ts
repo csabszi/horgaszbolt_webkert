@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
-import { Message } from '../../shared/message.model';
+import { Message } from '../../shared/models/message.model';
 
 @Component({
   selector: 'app-contact',
