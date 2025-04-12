@@ -4,8 +4,7 @@
   <p *ngIf="products.length === 0">Jelenleg nincs elérhető termék.</p>
 
   <div class="products-grid" *ngIf="products.length > 0">
-    <a *ngFor="let product of products" class="product-card"
-      [ngClass]="{ 'out-of-stock-card': product.amount === 0 }">
+    <a *ngFor="let product of products" class="product-card" [ngClass]="{ 'out-of-stock-card': product.amount === 0 }">
 
       <img [src]="product.imageUrl" [alt]="product.name" [ngClass]="{ 'faded': product.amount === 0 }" />
 
