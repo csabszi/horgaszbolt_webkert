@@ -5,6 +5,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../shared/models/message.model';
 
@@ -20,7 +22,9 @@ import { Message } from '../../shared/models/message.model';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatOptionModule
   ]
 })
 
@@ -32,7 +36,8 @@ export class ContactComponent {
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      message: ['']
+      category: ['', Validators.required],
+      message: ['', Validators.required]
     });
   }
 
@@ -41,11 +46,13 @@ export class ContactComponent {
       this.isLoading = true;
 
       const newMessage: Message = {
-        name: this.contactForm.value.name!,
-        email: this.contactForm.value.email!,
-        message: this.contactForm.value.message!,
+        name: this.contactForm.get('name')?.value || '',
+        email: this.contactForm.get('email')?.value || '',
+        message: this.contactForm.get('message')?.value || '',
+        category: this.contactForm.get('category')?.value as 'Panasz' | 'Észrevétel' | 'Hibabejelentés' | 'Termék',
         sentDate: new Date()
       };
+
 
       const storedMessages: Message[] = JSON.parse(localStorage.getItem('messages') || '[]');
       storedMessages.push(newMessage);
@@ -58,5 +65,6 @@ export class ContactComponent {
       }, 1500);
     }
   }
+
 
 }

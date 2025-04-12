@@ -24,6 +24,16 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
+      <mat-label>Kategória</mat-label>
+      <mat-select formControlName="category">
+        <mat-option value="Panasz">Panasz</mat-option>
+        <mat-option value="Észrevétel">Észrevétel</mat-option>
+        <mat-option value="Hibabejelentés">Hibabejelentés</mat-option>
+        <mat-option value="Termék">Termék</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Üzenet</mat-label>
       <textarea matInput formControlName="message" rows="5"></textarea>
     </mat-form-field>
