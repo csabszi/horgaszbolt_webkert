@@ -1,3 +1,6 @@
+<h2>Rendelés összesítő</h2>
+<app-cart-summary [cart]="cartItems" (clearCartClicked)="onClearCart()"></app-cart-summary>
+
 <div id="contact-container">
     <form [formGroup]="orderForm" (ngSubmit)="submitOrder()" class="contact-form">
         <h1>Megrendelés</h1>

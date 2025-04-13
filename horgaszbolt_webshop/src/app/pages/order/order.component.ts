@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CartSummaryComponent } from '../../shared/cart-summary/cart-summary.component';
 
 @Component({
   selector: 'app-order',
@@ -18,7 +19,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule],
+    MatProgressSpinnerModule,
+    CartSummaryComponent],
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
@@ -42,13 +44,43 @@ export class OrderComponent implements OnInit {
 
   submitOrder() {
     if (this.orderForm.valid) {
-      console.log('Form:', this.orderForm.value);
-      console.log('Kosár:', this.cartItems);
-      alert('Rendelés sikeresen elküldve!');
+      const formData = this.orderForm.value;
+
+      const previousOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const newOrder = {
+        form: formData,
+        items: this.cartItems,
+        date: new Date()
+      };
+      previousOrders.push(newOrder);
+      localStorage.setItem('orders', JSON.stringify(previousOrders));
+
+      const savedProducts = localStorage.getItem('products');
+      if (savedProducts) {
+        const products = JSON.parse(savedProducts);
+        this.cartItems.forEach(cartItem => {
+          const prod = products.find((p: any) => p.id === cartItem.product.id);
+          if (prod) {
+            prod.amount -= cartItem.quantity;
+            if (prod.amount < 0) prod.amount = 0;
+          }
+        });
+        localStorage.setItem('products', JSON.stringify(products));
+      }
+
       this.cartService.clearCart();
+      this.cartItems = [];
+
+      alert('Rendelés sikeresen elküldve!');
       this.orderForm.reset();
     } else {
       alert('Kérlek tölts ki minden kötelező mezőt!');
     }
+  }
+
+
+  onClearCart(): void {
+    this.cartService.clearCart();
+    this.cartItems = [];
   }
 }

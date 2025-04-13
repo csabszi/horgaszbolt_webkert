@@ -1,0 +1,7 @@
+<div class="cart-summary">
+    <p><strong>Termékek száma:</strong> {{ getTotalQuantity() }} db</p>
+    <p><strong>Összesen:</strong> {{ getTotalPrice() | hufCurrency }}</p>
+    <button mat-stroked-button color="warn" (click)="clearCart()">
+        Rendelés törlése
+    </button>
+</div>

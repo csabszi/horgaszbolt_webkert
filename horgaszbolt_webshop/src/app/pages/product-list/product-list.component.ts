@@ -6,15 +6,21 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CurrencyPipe } from '../../shared/models/currency.pipe';
 import { MatIconModule } from '@angular/material/icon';
+import { CartService } from '../../shared/cart.service';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
-  imports: [RouterModule, CommonModule, CurrencyPipe, MatIconModule],
+  imports: [RouterModule,
+    CommonModule,
+    CurrencyPipe,
+    MatIconModule],
 })
 export class ProductListComponent {
+  constructor(private cartService: CartService) { }
+
   products: Product[] = [
     {
       id: 1,
@@ -158,21 +164,25 @@ export class ProductListComponent {
     }
   ];
 
+  ngOnInit(): void {
+    const saved = localStorage.getItem('products');
+    this.products = saved ? JSON.parse(saved) : [...this.products];
+  }
+
   cart: CartItem[] = [];
   formAdatok: OrderData | null = null;
 
   orderProduct(product: Product): void {
     if (product.amount > 0) {
       product.amount--;
-
-      const existingItem = this.cart.find(item => item.product.id === product.id);
-      if (existingItem) {
-        existingItem.quantity++;
-      } else {
-        this.cart.push({ product, quantity: 1 });
-      }
+      this.cartService.addToCart({ product, quantity: 1 });
+      localStorage.setItem('products', JSON.stringify(this.products));
     } else {
       alert('Ez a termék elfogyott!');
     }
+  }
+
+  getQuantity(): number {
+    return this.cartService.getTotalQuantity();
   }
 }
