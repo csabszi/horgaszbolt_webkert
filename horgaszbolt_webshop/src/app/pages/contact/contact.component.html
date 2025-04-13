@@ -38,6 +38,17 @@
       <textarea matInput formControlName="message" rows="5"></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Dátum</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="preferredDate" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="acceptTerms">
+      Elfogadom az adatkezelési tájékoztatót
+    </mat-checkbox>
+
     <button mat-flat-button color="primary" type="submit" [disabled]="contactForm.invalid">
       Küldés
     </button>

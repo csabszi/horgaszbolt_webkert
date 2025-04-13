@@ -9,6 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../shared/models/message.model';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-contact',
@@ -24,7 +27,10 @@ import { Message } from '../../shared/models/message.model';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule
   ]
 })
 
@@ -37,7 +43,9 @@ export class ContactComponent {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       category: ['', Validators.required],
-      message: ['', Validators.required]
+      message: ['', Validators.required],
+      preferredDate: ['', Validators.required],
+      acceptTerms: [false, Validators.requiredTrue]
     });
   }
 
@@ -45,12 +53,14 @@ export class ContactComponent {
     if (this.contactForm.valid) {
       this.isLoading = true;
 
+      const rawDate = this.contactForm.get('preferredDate')?.value;
+
       const newMessage: Message = {
         name: this.contactForm.get('name')?.value || '',
         email: this.contactForm.get('email')?.value || '',
         message: this.contactForm.get('message')?.value || '',
         category: this.contactForm.get('category')?.value as 'Panasz' | 'Észrevétel' | 'Hibabejelentés' | 'Termék',
-        sentDate: new Date()
+        sentDate: rawDate ? new Date(rawDate) : new Date()
       };
 
 

@@ -56,6 +56,24 @@
         color: #888 !important;
         opacity: 1 !important;
     }
+
+    ::ng-deep .mat-mdc-checkbox label,
+    ::ng-deep .mat-mdc-checkbox .mdc-label {
+        color: #121212 !important;
+    }
+
+    ::ng-deep .mat-mdc-checkbox .mdc-checkbox__background {
+        border-color: #121212 !important;
+    }
+
+    ::ng-deep .mat-mdc-checkbox .mdc-checkbox__checkmark-path {
+        stroke: #121212 !important;
+    }
+
+    ::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--checked .mdc-checkbox__background {
+        background-color: #121212 !important;
+    }
+
 }
 
 * {
