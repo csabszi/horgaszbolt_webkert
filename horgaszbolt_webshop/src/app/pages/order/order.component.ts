@@ -55,19 +55,6 @@ export class OrderComponent implements OnInit {
       previousOrders.push(newOrder);
       localStorage.setItem('orders', JSON.stringify(previousOrders));
 
-      const savedProducts = localStorage.getItem('products');
-      if (savedProducts) {
-        const products = JSON.parse(savedProducts);
-        this.cartItems.forEach(cartItem => {
-          const prod = products.find((p: any) => p.id === cartItem.product.id);
-          if (prod) {
-            prod.amount -= cartItem.quantity;
-            if (prod.amount < 0) prod.amount = 0;
-          }
-        });
-        localStorage.setItem('products', JSON.stringify(products));
-      }
-
       this.cartService.clearCart();
       this.cartItems = [];
 
@@ -80,6 +67,20 @@ export class OrderComponent implements OnInit {
 
 
   onClearCart(): void {
+    const productsRaw = localStorage.getItem('products');
+    if (!productsRaw) return;
+
+    const products = JSON.parse(productsRaw);
+
+    this.cartItems.forEach(item => {
+      const found = products.find((p: any) => p.id === item.product.id);
+      if (found) {
+        found.amount += item.quantity;
+      }
+    });
+
+    localStorage.setItem('products', JSON.stringify(products));
+
     this.cartService.clearCart();
     this.cartItems = [];
   }
