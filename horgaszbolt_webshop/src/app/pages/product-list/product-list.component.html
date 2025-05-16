@@ -3,29 +3,43 @@
 
   <div class="cart-summary">
     <p><strong>Kosárban:</strong> {{ getQuantity() }} termék</p>
-    <p><a routerLink="/order">Rendelés <mat-icon matSuffix>shopping_cart</mat-icon></a></p>
+    <p>
+      <a routerLink="/order">
+        Rendelés
+        <mat-icon matSuffix>shopping_cart</mat-icon>
+      </a>
+    </p>
   </div>
 
-  <p *ngIf="products.length === 0">Jelenleg nincs elérhető termék.</p>
+  @if (products.length === 0) {
+  <p>Jelenleg nincs elérhető termék.</p>
+  }
 
-  <div class="products-grid" *ngIf="products.length > 0">
-    <a *ngFor="let product of products" class="product-card" [ngClass]="{ 'out-of-stock-card': product.amount === 0 }">
+  @if (products.length > 0) {
+  <div class="products-grid">
+    @for (product of products; track product.id) {
+    <a class="product-card" [ngClass]="{ 'out-of-stock-card': product.amount === 0 }">
       <img [src]="product.imageUrl" [alt]="product.name" [ngClass]="{ faded: product.amount === 0 }" />
 
       <h3>{{ product.name }}</h3>
       <p>{{ product.price | hufCurrency }}</p>
 
       <p [ngClass]="{
-          'in-stock': product.amount > 0,
-          'out-of-stock': product.amount === 0
-        }">
-        {{ product.amount > 0
+              'in-stock': product.amount > 0,
+              'out-of-stock': product.amount === 0
+            }">
+        {{
+        product.amount > 0
         ? 'Készleten: ' + product.amount + ' db'
-        : 'Elfogyott' }}
+        : 'Elfogyott'
+        }}
       </p>
 
       <button mat-flat-button color="primary" (click)="orderProduct(product)" [disabled]="product.amount === 0">
         Rendelés
       </button>
     </a>
+    }
   </div>
+  }
+</div>
