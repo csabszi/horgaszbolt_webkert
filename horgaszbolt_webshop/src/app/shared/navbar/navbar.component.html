@@ -1,13 +1,13 @@
 <nav class="navbar">
   <ul class="nav-links">
     <li><a routerLink="/home">Főoldal</a></li>
-    <li><a routerLink="/product-list">Termékek</a></li>
-    <li><a routerLink="/contact">Kapcsolatfelvétel</a></li>
 
     @if (!isLoggedIn) {
     <li><a routerLink="/login">Bejelentkezés</a></li>
     <li><a routerLink="/register">Regisztráció</a></li>
     } @else {
+    <li><a routerLink="/product-list">Termékek</a></li>
+    <li><a routerLink="/contact">Kapcsolatfelvétel</a></li>
     <li>
       <button (click)="logout()" class="logout-button">Kijelentkezés</button>
     </li>

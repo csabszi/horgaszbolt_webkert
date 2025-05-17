@@ -5,8 +5,10 @@ import {
   signOut,
   authState,
   User,
-  UserCredential
+  UserCredential,
+  createUserWithEmailAndPassword
 } from '@angular/fire/auth';
+import {doc, setDoc, Firestore, collection } from '@angular/fire/firestore'
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -18,7 +20,8 @@ export class AuthService {
 
   constructor(
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private firestore: Firestore
   ) {
     this.currentUser = authState(this.auth);
   }
@@ -40,5 +43,12 @@ export class AuthService {
 
   updateLoginStatus(isLoggedIn: boolean): void {
     localStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
+  }
+
+
+private async createUserData(userId: string, userData: Partial<User>): Promise<void> {
+    const userRef = doc(collection(this.firestore, 'Users'), userId);
+    
+    return setDoc(userRef, userData);
   }
 }

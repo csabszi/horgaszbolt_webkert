@@ -26,6 +26,12 @@
         <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid">
             Bejelentkezés
         </button>
+        @if (loginError) {
+        <div class="error-message">
+            <mat-icon>error</mat-icon> {{ loginError }}
+        </div>
+        }
+
     </form>
     }
 </div>

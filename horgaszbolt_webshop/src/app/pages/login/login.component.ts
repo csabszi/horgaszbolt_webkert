@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../shared/services/auth.service';
-import { Router } from '@angular/router';
-import { FirebaseError } from 'firebase/app';
+import { Subscription } from 'rxjs';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-login',
@@ -25,9 +26,12 @@ import { FirebaseError } from 'firebase/app';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-  isLoading = false;
+export class LoginComponent implements OnDestroy {
   loginForm: FormGroup;
+  isLoading = false;
+  loginError = '';
+  showLoginForm = true;
+  authSubscription?: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -36,46 +40,54 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  async login() {
-    if (this.loginForm.invalid) return;
+  login(): void {
+    if (this.loginForm.invalid) {
+      this.loginError = 'Kérlek, töltsd ki helyesen az űrlapot.';
+      return;
+    }
+
+    const email = this.loginForm.get('email')?.value;
+    const password = this.loginForm.get('password')?.value;
 
     this.isLoading = true;
+    this.showLoginForm = false;
+    this.loginError = '';
 
-    const email: string = this.loginForm.get('email')?.value;
-    const password: string = this.loginForm.get('password')?.value;
+    this.authService.signIn(email, password)
+      .then(userCredential => {
+        console.log('Sikeres bejelentkezés:', userCredential.user);
+        this.authService.updateLoginStatus(true);
+        this.router.navigateByUrl('/home');
+      })
+      .catch((error: FirebaseError) => {
+        console.error('Bejelentkezési hiba:', error.code, error.message);
+        this.isLoading = false;
+        this.showLoginForm = true;
 
-    try {
-      await this.authService.signIn(email, password);
-      this.authService.updateLoginStatus(true);
-      this.router.navigate(['/home']);
-    } catch (error) {
-      let message = 'Ismeretlen hiba történt.';
-
-      if (error instanceof FirebaseError) {
         switch (error.code) {
-          case 'auth/invalid-email':
-            message = 'Hibás email cím formátum.';
-            break;
           case 'auth/user-not-found':
-            message = 'A megadott email címhez nem tartozik felhasználó.';
+            this.loginError = 'Ilyen felhasználó nem létezik!';
             break;
           case 'auth/wrong-password':
-            message = 'Helytelen jelszó.';
+            this.loginError = 'Helytelen jelszó!';
             break;
-          case 'auth/too-many-requests':
-            message = 'Túl sok próbálkozás. Próbáld újra később.';
+          case 'auth/invalid-credential':
+            this.loginError = 'Helytelen email cím vagy jelszó!';
             break;
+          default:
+            this.loginError = 'A bejelentkezés során hiba történt!';
         }
-      }
-
-      alert(message);
-    } finally {
-      this.isLoading = false;
-    }
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
+  }
 }
