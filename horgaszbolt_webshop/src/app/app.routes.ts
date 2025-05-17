@@ -8,6 +8,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { authGuard } from './shared/guards/auth.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ImportProductsComponent } from './pages/import/import.component';
+import { adminGuard } from './shared/guards/admin.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -18,5 +20,6 @@ export const routes: Routes = [
     { path: "login", component: LoginComponent },
     { path: "register", component: RegisterComponent },
     { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
+    { path: 'import', component: ImportProductsComponent, canActivate: [adminGuard] },
     { path: '**', component: NotFoundComponent }
 ];
