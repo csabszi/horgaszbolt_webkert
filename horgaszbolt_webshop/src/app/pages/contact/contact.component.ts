@@ -8,10 +8,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { Message } from '../../shared/models/message.model';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { AuthService } from '../../shared/services/auth.service';
+import { Message } from '../../shared/models/message.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact',
@@ -33,15 +36,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCheckboxModule
   ]
 })
-
 export class ContactComponent {
   isLoading = false;
   contactForm;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private firestore: Firestore,
+    private authService: AuthService
+  ) {
     this.contactForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
       category: ['', Validators.required],
       message: ['', Validators.required],
       preferredDate: ['', Validators.required],
@@ -50,31 +54,36 @@ export class ContactComponent {
   }
 
   send() {
-    if (this.contactForm.valid) {
-      this.isLoading = true;
+    if (this.contactForm.invalid) return;
 
-      const rawDate = this.contactForm.get('preferredDate')?.value;
+    this.isLoading = true;
 
-      const newMessage: Message = {
-        name: this.contactForm.get('name')?.value || '',
-        email: this.contactForm.get('email')?.value || '',
+    this.authService.currentUser.pipe(take(1)).subscribe(user => {
+      if (!user) {
+        alert('Be kell jelentkezned az üzenet küldéséhez.');
+        this.isLoading = false;
+        return;
+      }
+
+      const msg: Message = {
+        userId: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
         message: this.contactForm.get('message')?.value || '',
         category: this.contactForm.get('category')?.value as 'Panasz' | 'Észrevétel' | 'Hibabejelentés' | 'Termék',
-        sentDate: rawDate ? new Date(rawDate) : new Date()
+        sentDate: new Date()
       };
 
-
-      const storedMessages: Message[] = JSON.parse(localStorage.getItem('messages') || '[]');
-      storedMessages.push(newMessage);
-      localStorage.setItem('messages', JSON.stringify(storedMessages));
-
-      setTimeout(() => {
-        alert('Üzenet elküldve!');
+      const messagesRef = collection(this.firestore, 'Messages');
+      addDoc(messagesRef, msg).then(() => {
+        alert('Üzenet sikeresen elküldve!');
         this.contactForm.reset();
+      }).catch(error => {
+        console.error('Hiba az üzenet mentésekor:', error);
+        alert('Hiba történt az üzenet elküldésekor. Próbáld újra később.');
+      }).finally(() => {
         this.isLoading = false;
-      }, 1500);
-    }
+      });
+    });
   }
-
-
 }

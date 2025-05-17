@@ -12,6 +12,7 @@ import { doc, setDoc, Firestore, collection } from '@angular/fire/firestore'
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../models/User';
+import { updateProfile } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,10 @@ export class AuthService {
         email,
         password
       );
+
+      await updateProfile(userCredential.user, {
+        displayName: userData.name || ''
+      });
 
       await this.createUserData(userCredential.user.uid, {
         ...userData,

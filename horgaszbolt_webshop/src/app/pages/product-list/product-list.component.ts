@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CurrencyPipe } from '../../shared/models/currency.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { CartService } from '../../shared/cart.service';
+import { CartService } from '../../shared/services/cart.service';
 
 @Component({
   selector: 'app-product-list',
