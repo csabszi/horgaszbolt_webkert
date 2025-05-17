@@ -1,1 +1,9 @@
-<p>profile works!</p>
+<div class="profile-container" *ngIf="userData">
+    <h1>Profil</h1>
+
+    <p><strong>Név:</strong> {{ userData.name }}
+        <span *ngIf="userData.isAdmin" class="admin-badge">[ADMIN]</span>
+    </p>
+
+    <p><strong>Email:</strong> {{ userData.email }}</p>
+</div>
