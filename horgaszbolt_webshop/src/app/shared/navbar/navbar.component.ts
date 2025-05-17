@@ -1,12 +1,25 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+  isLoggedIn = false;
+  private authService = inject(AuthService);
 
+  constructor() {
+    this.authService.isLoggedIn().subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
+  }
+
+  logout(): void {
+    this.authService.signOut();
+  }
 }

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthService } from '../../shared/services/auth.service';
+import { Router } from '@angular/router';
+import { FirebaseError } from 'firebase/app';
 
 @Component({
   selector: 'app-login',
@@ -25,9 +27,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class LoginComponent {
   isLoading = false;
-  loginForm;
+  loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private auth: Auth) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -36,16 +42,40 @@ export class LoginComponent {
 
   async login() {
     if (this.loginForm.invalid) return;
+
     this.isLoading = true;
 
-    const { email, password } = this.loginForm.value;
+    const email: string = this.loginForm.get('email')?.value;
+    const password: string = this.loginForm.get('password')?.value;
+
     try {
-      await signInWithEmailAndPassword(this.auth, email!, password!);
-      alert('Sikeres bejelentkezés!');
-    } catch (error: any) {
-      alert(error.message);
+      await this.authService.signIn(email, password);
+      this.authService.updateLoginStatus(true);
+      this.router.navigate(['/home']);
+    } catch (error) {
+      let message = 'Ismeretlen hiba történt.';
+
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case 'auth/invalid-email':
+            message = 'Hibás email cím formátum.';
+            break;
+          case 'auth/user-not-found':
+            message = 'A megadott email címhez nem tartozik felhasználó.';
+            break;
+          case 'auth/wrong-password':
+            message = 'Helytelen jelszó.';
+            break;
+          case 'auth/too-many-requests':
+            message = 'Túl sok próbálkozás. Próbáld újra később.';
+            break;
+        }
+      }
+
+      alert(message);
     } finally {
       this.isLoading = false;
     }
   }
+
 }
