@@ -64,6 +64,7 @@ export class AuthService {
         ...userData,
         id: userCredential.user.uid,
         email: email,
+        isAdmin: false,
       });
 
       return userCredential;
