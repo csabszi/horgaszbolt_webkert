@@ -1,0 +1,31 @@
+<div id="login-container">
+    @if (isLoading) {
+    <div class="loading-container">
+        <h2>Bejelentkezés folyamatban</h2>
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Kérlek várj...</p>
+    </div>
+    }
+
+    @if (!isLoading) {
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="auth-form">
+        <h1>Bejelentkezés</h1>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" />
+            <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Jelszó</mat-label>
+            <input matInput type="password" formControlName="password" />
+            <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid">
+            Bejelentkezés
+        </button>
+    </form>
+    }
+</div>
