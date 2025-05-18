@@ -65,7 +65,7 @@
         <p>📍 <strong>Cím:</strong> {{ order.address }}</p>
         <p>📞 <strong>Telefon:</strong> {{ order.phone }}</p>
         <p>💬 <strong>Megjegyzés:</strong> {{ order.comment || '—' }}</p>
-        <p>💰 <strong>Összeg:</strong> {{ order.totalPrice | number:'1.0-2' }} Ft</p>
+        <p>💰 <strong>Összeg:</strong> {{ order.totalPrice | hufCurrency }}</p>
       </li>
       }
     </ul>

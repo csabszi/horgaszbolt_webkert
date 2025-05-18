@@ -15,12 +15,13 @@ import { User } from '../../shared/models/User';
 import { Message } from '../../shared/models/message.model';
 import { FormsModule } from '@angular/forms';
 import { HungarianDatePipe } from '../../shared/pipes/hungarian-date.pipe';
+import { CurrencyPipe } from '../../shared/pipes/currency.pipe';
 import { OrderData } from '../../shared/models/order-data.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, HungarianDatePipe],
+  imports: [CommonModule, FormsModule, HungarianDatePipe, CurrencyPipe],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
