@@ -11,7 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
     <div class="import-container">
       <h2>Termékek importálása Firestore-be</h2>
       <button mat-flat-button color="primary" (click)="importProducts()">Importálás indítása</button>
-      <p *ngIf="done">✅ Sikeresen importálva!</p>
+      @if(done) {
+          <p>✅ Sikeresen importálva!</p> 
+      }
+
     </div>
   `,
   styles: [`

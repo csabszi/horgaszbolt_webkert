@@ -33,9 +33,9 @@
             <mat-icon matSuffix>lock</mat-icon>
         </mat-form-field>
 
-        <div *ngIf="registerForm.hasError('passwordsMismatch')" class="error">
-            A jelszavak nem egyeznek!
-        </div>
+        @if (registerForm.hasError('passwordsMismatch')) {
+        <div class="error">A jelszavak nem egyeznek!</div>
+        }
 
         <button mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid">
             Regisztráció
