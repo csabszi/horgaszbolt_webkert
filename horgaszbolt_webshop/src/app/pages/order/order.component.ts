@@ -64,13 +64,19 @@ export class OrderComponent implements OnInit {
     const userSnap = await getDoc(userRef);
     const userData = userSnap.data();
 
+    const total = this.cartItems.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+
     const order: Omit<OrderData, 'id' | 'createdAt'> = {
       userId: authUser.uid,
       userEmail: authUser.email ?? '',
       name: userData?.['name'] ?? '',
       address: this.orderForm.value.address,
       phone: this.orderForm.value.phone,
-      comment: this.orderForm.value.comment
+      comment: this.orderForm.value.comment,
+      totalPrice: total
     };
 
     try {

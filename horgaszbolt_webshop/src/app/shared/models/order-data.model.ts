@@ -6,5 +6,6 @@ export interface OrderData {
     address: string;
     phone: string;
     comment?: string;
+    totalPrice: number;
     createdAt?: Date;
 }

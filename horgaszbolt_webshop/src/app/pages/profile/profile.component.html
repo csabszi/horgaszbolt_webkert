@@ -13,34 +13,62 @@
 
   @if (userData?.isAdmin) {
   <div class="admin-messages">
-    <h2>Beérkezett üzenetek</h2>
+    <h2>📬 Beérkezett üzenetek</h2>
 
     <div class="filter">
-      <label for="category">Szűrés:</label>
+      <label for="category">📂 Szűrés:</label>
       <select id="category" [(ngModel)]="selectedCategory" (change)="filterMessages()">
-        <option value="">Összes</option>
-        <option value="Panasz">Panasz</option>
-        <option value="Észrevétel">Észrevétel</option>
-        <option value="Hibabejelentés">Hibabejelentés</option>
-        <option value="Termék">Termék</option>
+        <option value="">📑 Összes</option>
+        <option value="Panasz">😠 Panasz</option>
+        <option value="Észrevétel">💡 Észrevétel</option>
+        <option value="Hibabejelentés">🐞 Hibabejelentés</option>
+        <option value="Termék">📦 Termék</option>
       </select>
     </div>
 
     @if (filteredMessages.length === 0) {
-    <p class="no-messages">Nincs megjeleníthető üzenet.</p>
+    <p class="no-messages">❌ Nincs megjeleníthető üzenet.</p>
     }
 
     <ul class="message-list">
       @for (msg of filteredMessages; track msg.userId) {
-      <li class="message-item">
-        <p><strong>Kategória:</strong> {{ msg.category }}</p>
-        <p><strong>Név:</strong> {{ msg.name }}</p>
-        <p><strong>Email:</strong> {{ msg.email }}</p>
-        <p><strong>Dátum:</strong> {{ msg.sentDateConverted | hungarianDate }}</p>
-        <p><strong>Üzenet:</strong><br />{{ msg.message }}</p>
+      <li class="message-card">
+        <p>📂 <strong>Kategória:</strong> {{ msg.category }}</p>
+        <p>👤 <strong>Név:</strong> {{ msg.name }}</p>
+        <p>📧 <strong>Email:</strong> {{ msg.email }}</p>
+        <p>🗓️ <strong>Dátum:</strong> {{ msg.sentDateConverted | hungarianDate }}</p>
+        <p>💬 <strong>Üzenet:</strong><br />{{ msg.message }}</p>
       </li>
       }
     </ul>
   </div>
+
   }
+
+  <div class="user-orders">
+    <h2>🧾 Saját rendelések</h2>
+
+    <label for="sort">📊 Rendezés:</label>
+    <select id="sort" [(ngModel)]="sortBy" (change)="changeSort(sortBy)">
+      <option value="date">🕒 Dátum szerint</option>
+      <option value="price">💰 Összeg szerint</option>
+    </select>
+
+    @if (orders.length === 0) {
+    <p class="no-orders">📭 Még nincs leadott rendelésed.</p>
+    }
+
+    <ul class="order-list">
+      @for (order of orders; track order.id) {
+      <li class="order-card">
+        <p>🗓️ <strong>Dátum:</strong> {{ order.createdAt | hungarianDate }}</p>
+        <p>📍 <strong>Cím:</strong> {{ order.address }}</p>
+        <p>📞 <strong>Telefon:</strong> {{ order.phone }}</p>
+        <p>💬 <strong>Megjegyzés:</strong> {{ order.comment || '—' }}</p>
+        <p>💰 <strong>Összeg:</strong> {{ order.totalPrice | number:'1.0-2' }} Ft</p>
+      </li>
+      }
+    </ul>
+  </div>
+
 </div>
