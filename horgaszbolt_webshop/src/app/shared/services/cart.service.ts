@@ -38,4 +38,9 @@ export class CartService {
   private saveCart(): void {
     localStorage.setItem('cart', JSON.stringify(this.cart));
   }
+
+  removeFromCart(productId: string): void {
+    this.cart = this.cart.filter(item => item.product.id !== productId);
+    this.saveCart();
+  }
 }

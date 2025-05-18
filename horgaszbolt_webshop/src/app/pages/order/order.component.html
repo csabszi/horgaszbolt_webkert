@@ -1,5 +1,16 @@
 <div class="orderinfo">
     <h2>Rendelés összesítő</h2>
+
+    <ul class="cart-summary">
+        @for (item of cartItems; track item.product.id) {
+        <li>
+            🛒 {{ item.product.name }} – {{ item.quantity }} db
+            <button mat-button color="warn" (click)="removeItem(item.product.id)">Eltávolítás</button>
+        </li>
+        }
+    </ul>
+
+    <p><strong>Összesen:</strong> {{ getTotalQuantity() }} db – {{ getTotalPrice() | hufCurrency }}</p>
 </div>
 
 <div id="contact-container">

@@ -3,6 +3,7 @@
 
   <div class="cart-summary">
     <p><strong>Kosárban:</strong> {{ getQuantity() }} termék</p>
+    <p><strong>Összesen:</strong> {{ getTotalPrice() | hufCurrency }} </p>
     <p>
       <a routerLink="/order">
         Rendelés

@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { CurrencyPipe } from '../../shared/pipes/currency.pipe';
+import { CartItem } from '../../shared/models/cart-item.model';
 
 @Component({
   selector: 'app-product-list',
@@ -27,6 +28,7 @@ import { CurrencyPipe } from '../../shared/pipes/currency.pipe';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   userData: User | null = null;
+  cartItems: CartItem[] = [];
 
   constructor(
     private cartService: CartService,
@@ -54,8 +56,8 @@ export class ProductListComponent implements OnInit {
 
   orderProduct(product: Product): void {
     if (product.amount > 0) {
-      product.amount--;
       this.cartService.addToCart({ product, quantity: 1 });
+      product.amount--;
     } else {
       alert('Ez a termék elfogyott!');
     }
@@ -135,5 +137,13 @@ export class ProductListComponent implements OnInit {
           alert('Hiba a törlés során.');
         });
     }
+  }
+
+  getTotalPrice(): number {
+    return this.cartService.getCart().reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  }
+
+  getCart(): CartItem[] {
+    return this.cartItems;
   }
 }
