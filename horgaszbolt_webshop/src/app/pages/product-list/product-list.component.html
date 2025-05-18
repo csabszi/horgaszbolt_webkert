@@ -25,9 +25,9 @@
       <p>{{ product.price | hufCurrency }}</p>
 
       <p [ngClass]="{
-              'in-stock': product.amount > 0,
-              'out-of-stock': product.amount === 0
-            }">
+                  'in-stock': product.amount > 0,
+                  'out-of-stock': product.amount === 0
+                }">
         {{
         product.amount > 0
         ? 'Készleten: ' + product.amount + ' db'
@@ -38,6 +38,36 @@
       <button mat-flat-button color="primary" (click)="orderProduct(product)" [disabled]="product.amount === 0">
         Rendelés
       </button>
+
+      @if (userData?.isAdmin) {
+      <div class="admin-update">
+        <label>Készlet növelése:</label>
+        <div class="admin-input-group">
+          <input type="number" [(ngModel)]="product.addAmount" min="1" placeholder="Pl. 5" />
+          <button mat-raised-button color="accent" (click)="updateAmount(product)">Hozzáadás</button>
+        </div>
+
+        <label>Készlet csökkentése:</label>
+        <div class="admin-input-group">
+          <input type="number" [(ngModel)]="product.removeAmount" min="1" placeholder="Pl. 3" />
+          <button mat-raised-button color="warn" (click)="decreaseAmount(product)">Levonás</button>
+        </div>
+
+        <label>Ár módosítása (Ft):</label>
+        <div class="admin-input-group">
+          <input type="number" [(ngModel)]="product.newPrice" min="0" placeholder="Pl. 1990" />
+          <button mat-raised-button color="primary" (click)="updatePrice(product)">Ár módosítása</button>
+        </div><br>
+
+        <div class="admin-input-group">
+          <button mat-stroked-button color="warn" (click)="deleteProduct(product)">
+            Termék törlése
+          </button>
+        </div>
+      </div>
+
+      }
+
     </a>
     }
   </div>

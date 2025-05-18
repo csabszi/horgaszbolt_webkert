@@ -1,9 +1,14 @@
-<div class="profile-container" *ngIf="userData">
+@if (userData) {
+  <div class="profile-container">
     <h1>Profil</h1>
 
-    <p><strong>Név:</strong> {{ userData.name }}
-        <span *ngIf="userData.isAdmin" class="admin-badge">[ADMIN]</span>
+    <p>
+      <strong>Név:</strong> {{ userData.name }}
+      @if (userData.isAdmin) {
+        <span class="admin-badge">[ADMIN]</span>
+      }
     </p>
 
     <p><strong>Email:</strong> {{ userData.email }}</p>
-</div>
+  </div>
+}

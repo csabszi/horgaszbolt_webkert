@@ -1,4 +1,3 @@
-// src/app/admin/import-products.component.ts
 import { Component } from '@angular/core';
 import { ProductService } from '../../shared/services/product.service';
 import { Product } from '../../shared/models/product.model';

@@ -22,13 +22,18 @@ export class ProductService {
     return addDoc(this.productsCollection, product);
   }
 
-  updateProduct(id: string, product: Partial<Product>) {
+  updateProductAmount(id: string, newAmount: number): Promise<void> {
     const productRef = doc(this.firestore, 'Products', id);
-    return updateDoc(productRef, product);
+    return updateDoc(productRef, { amount: newAmount });
   }
 
   deleteProduct(id: string) {
     const productRef = doc(this.firestore, 'Products', id);
     return deleteDoc(productRef);
+  }
+
+  updateProduct(id: string, product: Partial<Product>): Promise<void> {
+    const productRef = doc(this.firestore, 'Products', id);
+    return updateDoc(productRef, product);
   }
 }
