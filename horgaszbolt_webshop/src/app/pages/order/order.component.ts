@@ -1,87 +1,90 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../shared/services/cart.service';
-import { CartItem } from '../../shared/models/cart-item.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CartSummaryComponent } from '../../shared/cart-summary/cart-summary.component';
+import { CartService } from '../../shared/services/cart.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { OrderService } from '../../shared/services/order.service';
+import { OrderData } from '../../shared/models/order-data.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-order',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
-    CartSummaryComponent],
+  ],
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
   orderForm!: FormGroup;
-  cartItems: CartItem[] = [];
+  cartItems: any[] = [];
 
-  constructor(private fb: FormBuilder, private cartService: CartService) { }
+  constructor(
+    private fb: FormBuilder,
+    private cartService: CartService,
+    private authService: AuthService,
+    private firestore: Firestore,
+    private orderService: OrderService
+  ) { }
 
   ngOnInit(): void {
-    this.cartItems = this.cartService.getCart();
-
     this.orderForm = this.fb.group({
-      name: ['', Validators.required],
       address: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
       comment: ['']
     });
+
+    this.cartItems = this.cartService.getCart();
   }
 
-  submitOrder() {
-    if (this.orderForm.valid) {
-      const formData = this.orderForm.value;
+  async submitOrder() {
+    if (this.orderForm.invalid) {
+      alert('Kérlek, tölts ki minden kötelező mezőt!');
+      return;
+    }
 
-      const previousOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      const newOrder = {
-        form: formData,
-        items: this.cartItems,
-        date: new Date()
-      };
-      previousOrders.push(newOrder);
-      localStorage.setItem('orders', JSON.stringify(previousOrders));
+    const authUser = await firstValueFrom(this.authService.currentUser);
+    if (!authUser) {
+      alert('Nem vagy bejelentkezve!');
+      return;
+    }
 
-      this.cartService.clearCart();
-      this.cartItems = [];
+    const userRef = doc(this.firestore, 'Users', authUser.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
 
+    const order: Omit<OrderData, 'id' | 'createdAt'> = {
+      userId: authUser.uid,
+      userEmail: authUser.email ?? '',
+      name: userData?.['name'] ?? '',
+      address: this.orderForm.value.address,
+      phone: this.orderForm.value.phone,
+      comment: this.orderForm.value.comment
+    };
+
+    try {
+      await this.orderService.createOrder(order);
       alert('Rendelés sikeresen elküldve!');
+      this.cartService.clearCart();
       this.orderForm.reset();
-    } else {
-      alert('Kérlek tölts ki minden kötelező mezőt!');
+    } catch (error) {
+      console.error('Hiba rendelés mentésekor:', error);
+      alert('Hiba történt a rendelés mentése közben.');
     }
   }
 
-
-  onClearCart(): void {
-    const productsRaw = localStorage.getItem('products');
-    if (!productsRaw) return;
-
-    const products = JSON.parse(productsRaw);
-
-    this.cartItems.forEach(item => {
-      const found = products.find((p: any) => p.id === item.product.id);
-      if (found) {
-        found.amount += item.quantity;
-      }
-    });
-
-    localStorage.setItem('products', JSON.stringify(products));
-
+  onClearCart() {
     this.cartService.clearCart();
-    this.cartItems = [];
   }
 }
