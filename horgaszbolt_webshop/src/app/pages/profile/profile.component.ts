@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
-import { Firestore, doc, getDoc, collection, getDocs } from '@angular/fire/firestore';
+import { collection, query, where, orderBy, getDoc, doc, Firestore, getDocs } from '@angular/fire/firestore';
 import { User } from '../../shared/models/User';
 import { Message } from '../../shared/models/message.model';
 import { FormsModule } from '@angular/forms';
@@ -45,8 +45,25 @@ export class ProfileComponent implements OnInit {
 
   async loadMessages() {
     const messagesRef = collection(this.firestore, 'Messages');
-    const snap = await getDocs(messagesRef);
-    this.allMessages = snap.docs.map(doc => {
+
+    let q;
+
+    if (this.selectedCategory) {
+      q = query(
+        messagesRef,
+        where('category', '==', this.selectedCategory),
+        orderBy('sentDate', 'desc')
+      );
+    } else {
+      q = query(
+        messagesRef,
+        orderBy('sentDate', 'desc')
+      );
+    }
+
+    const snap = await getDocs(q);
+
+    this.filteredMessages = snap.docs.map(doc => {
       const data = doc.data() as Message;
 
       return {
@@ -54,16 +71,9 @@ export class ProfileComponent implements OnInit {
         sentDateConverted: data.sentDate?.toDate?.()
       };
     });
-
-
-    this.filteredMessages = this.allMessages;
   }
 
   filterMessages() {
-    if (!this.selectedCategory) {
-      this.filteredMessages = this.allMessages;
-    } else {
-      this.filteredMessages = this.allMessages.filter(msg => msg.category === this.selectedCategory);
-    }
+    this.loadMessages();
   }
 }

@@ -36,7 +36,7 @@
         <p><strong>Kategória:</strong> {{ msg.category }}</p>
         <p><strong>Név:</strong> {{ msg.name }}</p>
         <p><strong>Email:</strong> {{ msg.email }}</p>
-        <p><strong>Dátum:</strong> {{ msg.sentDate?.toDate?.() | date:'short' | hungarianDate }}</p>
+        <p><strong>Dátum:</strong> {{ msg.sentDateConverted | hungarianDate }}</p>
         <p><strong>Üzenet:</strong><br />{{ msg.message }}</p>
       </li>
       }
