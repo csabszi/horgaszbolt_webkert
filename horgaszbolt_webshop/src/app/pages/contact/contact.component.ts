@@ -15,6 +15,7 @@ import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { AuthService } from '../../shared/services/auth.service';
 import { Message } from '../../shared/models/message.model';
 import { take } from 'rxjs/operators';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-contact',
@@ -71,7 +72,7 @@ export class ContactComponent {
         email: user.email || '',
         message: this.contactForm.get('message')?.value || '',
         category: this.contactForm.get('category')?.value as 'Panasz' | 'Észrevétel' | 'Hibabejelentés' | 'Termék',
-        sentDate: new Date()
+        sentDate: Timestamp.fromDate(new Date())
       };
 
       const messagesRef = collection(this.firestore, 'Messages');

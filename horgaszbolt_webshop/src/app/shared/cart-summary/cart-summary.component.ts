@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItem } from '../models/cart-item.model';
-import { CurrencyPipe } from '../../shared/models/currency.pipe';
+import { CurrencyPipe } from '../pipes/currency.pipe';
 
 @Component({
   selector: 'app-cart-summary',

@@ -1,14 +1,46 @@
-@if (userData) {
-  <div class="profile-container">
-    <h1>Profil</h1>
+<div class="profile-container">
+  <h1>Profil</h1>
 
+  <div class="profile-card">
     <p>
-      <strong>Név:</strong> {{ userData.name }}
-      @if (userData.isAdmin) {
-        <span class="admin-badge">[ADMIN]</span>
+      <strong>Név:</strong> {{ userData?.name }}
+      @if (userData?.isAdmin) {
+      <span class="admin-badge">[ADMIN]</span>
       }
     </p>
-
-    <p><strong>Email:</strong> {{ userData.email }}</p>
+    <p><strong>Email:</strong> {{ userData?.email }}</p>
   </div>
-}
+
+  @if (userData?.isAdmin) {
+  <div class="admin-messages">
+    <h2>Beérkezett üzenetek</h2>
+
+    <div class="filter">
+      <label for="category">Szűrés:</label>
+      <select id="category" [(ngModel)]="selectedCategory" (change)="filterMessages()">
+        <option value="">Összes</option>
+        <option value="Panasz">Panasz</option>
+        <option value="Észrevétel">Észrevétel</option>
+        <option value="Hibabejelentés">Hibabejelentés</option>
+        <option value="Termék">Termék</option>
+      </select>
+    </div>
+
+    @if (filteredMessages.length === 0) {
+    <p class="no-messages">Nincs megjeleníthető üzenet.</p>
+    }
+
+    <ul class="message-list">
+      @for (msg of filteredMessages; track msg.userId) {
+      <li class="message-item">
+        <p><strong>Kategória:</strong> {{ msg.category }}</p>
+        <p><strong>Név:</strong> {{ msg.name }}</p>
+        <p><strong>Email:</strong> {{ msg.email }}</p>
+        <p><strong>Dátum:</strong> {{ msg.sentDate?.toDate?.() | date:'short' | hungarianDate }}</p>
+        <p><strong>Üzenet:</strong><br />{{ msg.message }}</p>
+      </li>
+      }
+    </ul>
+  </div>
+  }
+</div>

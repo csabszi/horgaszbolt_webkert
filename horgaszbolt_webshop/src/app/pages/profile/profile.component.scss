@@ -1,13 +1,97 @@
 .profile-container {
     padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', sans-serif;
 
-    .admin-badge {
-        color: white;
-        background-color: crimson;
-        padding: 0.2rem 0.5rem;
-        margin-left: 1rem;
-        font-weight: bold;
-        border-radius: 4px;
-        font-size: 0.85rem;
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-card {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        text-align: center;
+
+        p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .admin-badge {
+            color: white;
+            background-color: crimson;
+            padding: 0.25rem 0.6rem;
+            margin-left: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+    }
+
+    .admin-messages {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .filter {
+            margin-bottom: 1rem;
+
+            label {
+                margin-right: 0.5rem;
+                font-weight: 500;
+            }
+
+            select {
+                padding: 0.4rem;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 1rem;
+            }
+        }
+
+        .no-messages {
+            color: #777;
+            font-style: italic;
+        }
+
+        .message-list {
+            list-style: none;
+            padding: 1rem;
+            margin: 0;
+
+            .message-item {
+                margin: 1rem auto;
+                max-width: 600px;
+                background: #fafafa;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 1rem;
+                text-align: left;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+                &:first-child {
+                    border-top: none;
+                }
+
+                p {
+                    margin: 0.4rem 0;
+                    line-height: 1.4;
+                }
+            }
+        }
     }
 }
